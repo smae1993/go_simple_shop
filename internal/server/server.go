@@ -19,11 +19,10 @@ type Server struct {
 }
 
 func New(cfg *config.Config, db *sql.DB) *Server {
-	// ۱. ساخت لایه دیتابیس و سرویس‌ها
+
 	queries := database.New(db)
 	postService := service.NewPostService(queries)
 
-	// ۲. ساخت موتور قالب و کنترلرها
 	renderer := handler.NewRenderer()
 	publicHandler := handler.NewPublicHandler(postService, renderer)
 	adminHandler := handler.NewAdminHandler(postService, renderer)
@@ -36,7 +35,6 @@ func New(cfg *config.Config, db *sql.DB) *Server {
 	}
 }
 
-// ساخت http.Server استاندارد با تنظیمات امنیتی Timeout برای محیط پروداکشن
 func (s *Server) HTTPServer() *http.Server {
 	return &http.Server{
 		Addr:         s.cfg.Port,

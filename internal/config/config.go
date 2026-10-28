@@ -15,7 +15,7 @@ func Load() *Config {
 	}
 	return &Config{
 		Port:          port,
-		DBPath:        "blog.db",
+		DBPath:        "app.db",
 		MigrationPath: "db/migrations/001_schema.sql",
 	}
 }

@@ -10,7 +10,6 @@ type Renderer struct {
 	templates map[string]*template.Template
 }
 
-// ترکیب کردن هر صفحه با قالب مادر (base.html) در لحظه بالا آمدن سرور
 func NewRenderer() *Renderer {
 	tmplMap := make(map[string]*template.Template)
 	baseLayout := "web/templates/layouts/base.html"
@@ -25,7 +24,6 @@ func NewRenderer() *Renderer {
 
 	for _, page := range pages {
 		fullPath := filepath.Join("web/templates", page)
-		// پارس همزمان قالب مادر و قالب صفحه
 		tmplMap[page] = template.Must(template.ParseFiles(baseLayout, fullPath))
 	}
 
@@ -39,6 +37,5 @@ func (rn *Renderer) Render(w http.ResponseWriter, pageName string, data any) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	// اجرای قالب مادر که خودش بخش content صفحه فرزند رو صدا می‌زنه
 	tmpl.ExecuteTemplate(w, "base", data)
 }

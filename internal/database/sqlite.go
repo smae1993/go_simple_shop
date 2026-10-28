@@ -8,7 +8,7 @@ import (
 )
 
 func NewSQLiteConnection(dbPath, migrationPath string) (*sql.DB, error) {
-	// فعال‌سازی WAL برای همزمانی بالا و busy_timeout برای جلوگیری از قفل شدن دیتابیس
+
 	dsn := "file:" + dbPath + "?_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)"
 	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
@@ -19,7 +19,6 @@ func NewSQLiteConnection(dbPath, migrationPath string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	// اجرای مایگریشن اولیه
 	schema, err := os.ReadFile(migrationPath)
 	if err != nil {
 		return nil, err
