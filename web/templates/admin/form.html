@@ -1,0 +1,33 @@
+{{ define "content" }}
+<h2>{{ .Title }}</h2>
+<form action="/admin/blog/post" method="POST">
+    <input type="hidden" name="id" value="{{ .Post.ID }}">
+
+    <div class="grid">
+        <label>عنوان مقاله
+            <input type="text" name="title" value="{{ .Post.Title }}" required>
+        </label>
+        <label>نامک (Slug انگلیسی برای URL)
+            <input type="text" name="slug" value="{{ .Post.Slug }}" placeholder="my-first-post" required>
+        </label>
+    </div>
+
+    <label>خلاصه مقاله (Summary)
+        <input type="text" name="summary" value="{{ .Post.Summary }}" required>
+    </label>
+
+    <label>متن کامل مقاله
+        <textarea name="content" rows="6" required>{{ .Post.Content }}</textarea>
+    </label>
+
+    <label>
+        <input type="checkbox" name="is_published" {{ if .Post.IsPublished }}checked{{ end }}>
+        انتشار عمومی در سایت
+    </label>
+
+    <div class="grid" style="margin-top: 1rem;">
+        <button type="submit">ذخیره مقاله</button>
+        <a href="/admin/blog" role="button" class="secondary">انصراف</a>
+    </div>
+</form>
+{{ end }}

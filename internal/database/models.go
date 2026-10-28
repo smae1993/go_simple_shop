@@ -8,6 +8,17 @@ import (
 	"time"
 )
 
+type Post struct {
+	ID          int64
+	Title       string
+	Slug        string
+	Summary     string
+	Content     string
+	IsPublished bool
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+}
+
 type User struct {
 	ID        int64
 	Name      string

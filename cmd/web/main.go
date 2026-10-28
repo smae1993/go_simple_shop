@@ -1,47 +1,50 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
+	"context"
+
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
-	_ "modernc.org/sqlite"
+	"github.com/smae1993/go_simple_shop/internal/config"
+	"github.com/smae1993/go_simple_shop/internal/database"
+	"github.com/smae1993/go_simple_shop/internal/server"
 )
 
 func main() {
-	db, err := sql.Open("sqlite", "file:app.db?_pragma=journal_mode(WAL)")
+	// ۱. بارگذاری تنظیمات
+	cfg := config.Load()
+
+	// ۲. اتصال به دیتابیس و اجرای مایگریشن‌ها
+	db, err := database.NewSQLiteConnection(cfg.DBPath, cfg.MigrationPath)
 	if err != nil {
-		log.Fatalf("error opening SQLite file: %v", err)
+		log.Fatalf("❌ error in db initialization: %v", err)
 	}
 	defer db.Close()
 
-	schemaSQL, err := os.ReadFile("db/migrations/001_schema.sql")
-	if err != nil {
-		log.Fatalf("migration file not found: %v", err)
-	}
-	if _, err := db.Exec(string(schemaSQL)); err != nil {
-		log.Fatalf("error creating database table: %v", err)
-	}
+	// ۳. ساخت سرور و سیم‌کشی لایه‌ها
+	srv := server.New(cfg, db)
+	httpServer := srv.HTTPServer()
 
-	// ۳. تزریق وابستگی‌ها (Dependency Injection)
-	// queries := database.New(db)
-	// userService := service.NewUserService(queries)
-	// userHandler := handler.NewUserHandler(userService)
+	// ۴. اجرای سرور در یک Goroutine برای پشتیبانی از Graceful Shutdown
+	go func() {
+		log.Printf("🚀 وبلاگ روی http://localhost%s روشن شد", cfg.Port)
+		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("❌ error in running server: %v", err)
+		}
+	}()
 
-	// ۴. تعریف روت‌ها
-	mux := http.NewServeMux()
-	// mux.HandleFunc("GET /", userHandler.Index)
-	// mux.HandleFunc("POST /users", userHandler.Store)
-	// mux.HandleFunc("GET /users/{id}/edit", userHandler.EditForm)
-	// mux.HandleFunc("POST /users/{id}/update", userHandler.Update)
-	// mux.HandleFunc("POST /users/{id}/delete", userHandler.Delete)
+	// ۵. منتظر ماندن برای سیگنال خاموش شدن (Ctrl+C)
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	<-quit
 
-	// ۵. روشن کردن سرور
-	port := ":5050"
-	fmt.Printf("🚀 Server started on http://localhost%s\n", port)
-	if err := http.ListenAndServe(port, mux); err != nil {
-		log.Fatal(err)
-	}
+	log.Println("⏳ در حال خاموش کردن امن سرور...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	httpServer.Shutdown(ctx)
 }

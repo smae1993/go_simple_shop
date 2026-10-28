@@ -1,0 +1,10 @@
+{{ define "content" }}
+<article>
+    <header>
+        <h1>{{ .Post.Title }}</h1>
+        <small>منتشر شده در {{ .Post.CreatedAt.Format "2006-01-02 15:04" }}</small>
+    </header>
+    <p style="white-space: pre-line;">{{ .Post.Content }}</p>
+    <footer><a href="/blog">&rarr; بازگشت به لیست مقالات</a></footer>
+</article>
+{{ end }}

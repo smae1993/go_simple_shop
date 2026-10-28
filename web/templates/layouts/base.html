@@ -1,0 +1,27 @@
+{{ define "base" }}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ .Title }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+    <header class="container">
+        <nav>
+            <ul><li><strong>🚀 وبلاگ Go</strong></li></ul>
+            <ul>
+                <li><a href="/">صفحه اصلی</a></li>
+                <li><a href="/blog">وبلاگ</a></li>
+                <li><a href="/admin/blog" role="button" class="outline">پنل مدیریت</a></li>
+            </ul>
+        </nav>
+    </header>
+    <hr>
+    <main class="container">
+        <!-- محتوای هر صفحه دقیقاً اینجا تزریق می‌شود (معادل @yield('content')) -->
+        {{ template "content" . }}
+    </main>
+</body>
+</html>
+{{ end }}

@@ -1,0 +1,12 @@
+{{ define "content" }}
+<h2>آرشیو تمام مقالات</h2>
+{{ range .Posts }}
+<article>
+    <header><h3><a href="/blog/{{ .Slug }}">{{ .Title }}</a></h3></header>
+    <p>{{ .Summary }}</p>
+    <footer><a href="/blog/{{ .Slug }}">ادامه مطلب &larr;</a></footer>
+</article>
+{{ else }}
+<p>مقاله‌ای یافت نشد.</p>
+{{ end }}
+{{ end }}

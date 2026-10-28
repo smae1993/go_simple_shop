@@ -1,0 +1,18 @@
+{{ define "content" }}
+<section>
+    <h1>خوش آمدید!</h1>
+    <p>این یک وبلاگ فوق‌سریع با معماری استاندارد Go و SQLite است.</p>
+</section>
+<h3>جدیدترین نوشته‌ها</h3>
+<div class="grid">
+    {{ range .Posts }}
+    <article>
+        <h4><a href="/blog/{{ .Slug }}">{{ .Title }}</a></h4>
+        <p>{{ .Summary }}</p>
+        <small>تاریخ: {{ .CreatedAt.Format "2006-01-02" }}</small>
+    </article>
+    {{ else }}
+    <p>هنوز مقاله‌ای منتشر نشده است. از <a href="/admin/blog/post">پنل ادمین</a> یکی بسازید!</p>
+    {{ end }}
+</div>
+{{ end }}
