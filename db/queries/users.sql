@@ -4,19 +4,19 @@ ORDER BY id DESC;
 
 -- name: GetUser :one
 SELECT * FROM users
-WHERE id = $1 LIMIT 1;
+WHERE id = ? LIMIT 1;
 
 -- name: CreateUser :one
 INSERT INTO users (name, mobile, role)
-VALUES ($1, $2, $3)
+VALUES (?, ?, ?)
 RETURNING *;
 
 -- name: UpdateUser :one
 UPDATE users
-SET name = $2, mobile = $3, role = $4
-WHERE id = $1
+SET name = ?, mobile = ?, role = ?
+WHERE id = ?
 RETURNING *;
 
 -- name: DeleteUser :exec
 DELETE FROM users
-WHERE id = $1;
+WHERE id = ?;
