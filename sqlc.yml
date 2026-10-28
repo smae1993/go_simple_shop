@@ -1,0 +1,10 @@
+version: "2"
+sql:
+  - engine: "sqlite"
+    queries: "db/queries/users.sql"
+    schema: "db/migrations/001_schema.sql"
+    gen:
+      go:
+        package: "database"
+        out: "internal/database"
+        sql_package: "sqlite3" # درایور SQLite برای اکوسیستم Go
