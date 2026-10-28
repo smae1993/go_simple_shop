@@ -1,12 +1,49 @@
 {{ define "content" }}
-<h2>آرشیو تمام مقالات</h2>
-{{ range .Posts }}
-<article>
-    <header><h3><a href="/blog/{{ .Slug }}">{{ .Title }}</a></h3></header>
-    <p>{{ .Summary }}</p>
-    <footer><a href="/blog/{{ .Slug }}">ادامه مطلب &larr;</a></footer>
-</article>
-{{ else }}
-<p>مقاله‌ای یافت نشد.</p>
-{{ end }}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="border-b border-slate-200/80 pb-6">
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">آرشیو تمام مقالات</h1>
+        <p class="text-slate-500 text-sm mt-2">لیست همه مقالات و یادداشت‌های منتشر شده در وبلاگ</p>
+    </div>
+
+    <!-- Posts Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {{ range .Posts }}
+        <article class="group bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-xs hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 font-medium">
+                        مقاله
+                    </span>
+                    <time datetime="{{ .CreatedAt.Format "2006-01-02" }}">{{ .CreatedAt.Format "2006-01-02" }}</time>
+                </div>
+                <h2 class="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition">
+                    <a href="/blog/{{ .Slug }}">
+                        {{ .Title }}
+                    </a>
+                </h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    {{ .Summary }}
+                </p>
+            </div>
+            <div class="pt-5 mt-5 border-t border-slate-100 flex items-center justify-between">
+                <a href="/blog/{{ .Slug }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 group-hover:text-indigo-700 transition">
+                    ادامه مطلب
+                    <svg class="w-3.5 h-3.5 rtl:rotate-180 transition group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg>
+                </a>
+            </div>
+        </article>
+        {{ else }}
+        <div class="col-span-full py-16 px-6 rounded-2xl bg-white border border-dashed border-slate-300 text-center space-y-3">
+            <div class="w-12 h-12 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-xl">
+                📂
+            </div>
+            <h3 class="text-base font-semibold text-slate-800">مقاله‌ای یافت نشد</h3>
+            <p class="text-sm text-slate-500">در حال حاضر هیچ مقاله‌ای در این بخش منتشر نشده است.</p>
+        </div>
+        {{ end }}
+    </div>
+</div>
 {{ end }}

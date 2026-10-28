@@ -20,6 +20,10 @@ func (s *Server) registerRoutes() http.Handler {
 	mux.HandleFunc("POST /admin/blog/post", s.adminHandler.SavePost)
 	mux.HandleFunc("POST /admin/blog/post/{id}/delete", s.adminHandler.DeletePost)
 
+	// ۳. سرو فایل‌های استاتیک (CSS, تصاویر و ...)
+	fileServer := http.FileServer(http.Dir("web/static"))
+	mux.Handle("GET /static/", http.StripPrefix("/static/", fileServer))
+
 	// رد کردن تمام روت‌ها از داخل میدل‌ور لاگر
 	return middleware.RequestLogger(mux)
 }

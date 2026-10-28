@@ -1,10 +1,55 @@
 {{ define "content" }}
-<article>
-    <header>
-        <h1>{{ .Post.Title }}</h1>
-        <small>منتشر شده در {{ .Post.CreatedAt.Format "2006-01-02 15:04" }}</small>
-    </header>
-    <p style="white-space: pre-line;">{{ .Post.Content }}</p>
-    <footer><a href="/blog">&rarr; بازگشت به لیست مقالات</a></footer>
-</article>
+<div class="max-w-3xl mx-auto space-y-8">
+    <!-- Back to blog link -->
+    <div>
+        <a href="/blog" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-indigo-600 transition">
+            <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+            بازگشت به لیست مقالات
+        </a>
+    </div>
+
+    <!-- Article Content Card -->
+    <article class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-10 lg:p-12 space-y-8">
+        <!-- Post Header -->
+        <header class="space-y-4 border-b border-slate-100 pb-8">
+            <div class="flex items-center gap-2 text-xs text-slate-400">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">
+                    مقاله تخصصی
+                </span>
+                <span>•</span>
+                <time datetime="{{ .Post.CreatedAt.Format "2006-01-02 15:04" }}">
+                    منتشر شده در {{ .Post.CreatedAt.Format "2006-01-02 ساعت 15:04" }}
+                </time>
+            </div>
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight">
+                {{ .Post.Title }}
+            </h1>
+            {{ if .Post.Summary }}
+            <p class="text-base sm:text-lg text-slate-600 font-medium leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                {{ .Post.Summary }}
+            </p>
+            {{ end }}
+        </header>
+
+        <!-- Post Body -->
+        <div class="text-slate-800 text-base sm:text-lg leading-relaxed sm:leading-loose whitespace-pre-line">
+            {{ .Post.Content }}
+        </div>
+
+        <!-- Post Footer -->
+        <footer class="pt-8 border-t border-slate-100 flex items-center justify-between">
+            <a href="/blog" class="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition">
+                <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                </svg>
+                مطالعه سایر مقالات
+            </a>
+            <a href="/admin/blog/post?id={{ .Post.ID }}" class="text-xs text-slate-400 hover:text-indigo-600 transition">
+                ویرایش مقاله
+            </a>
+        </footer>
+    </article>
+</div>
 {{ end }}

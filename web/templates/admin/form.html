@@ -1,33 +1,112 @@
 {{ define "content" }}
-<h2>{{ .Title }}</h2>
-<form action="/admin/blog/post" method="POST">
-    <input type="hidden" name="id" value="{{ .Post.ID }}">
-
-    <div class="grid">
-        <label>عنوان مقاله
-            <input type="text" name="title" value="{{ .Post.Title }}" required>
-        </label>
-        <label>نامک (Slug انگلیسی برای URL)
-            <input type="text" name="slug" value="{{ .Post.Slug }}" placeholder="my-first-post" required>
-        </label>
+<div class="max-w-3xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-slate-200/80 pb-6">
+        <div>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ .Title }}</h1>
+            <p class="text-slate-500 text-sm mt-1">مشخصات مقاله را وارد یا ویرایش کنید</p>
+        </div>
+        <a href="/admin/blog" class="text-sm font-medium text-slate-500 hover:text-slate-800 transition">
+            &larr; بازگشت به لیست
+        </a>
     </div>
 
-    <label>خلاصه مقاله (Summary)
-        <input type="text" name="summary" value="{{ .Post.Summary }}" required>
-    </label>
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-8">
+        <form action="/admin/blog/post" method="POST" class="space-y-6">
+            <input type="hidden" name="id" value="{{ .Post.ID }}">
 
-    <label>متن کامل مقاله
-        <textarea name="content" rows="6" required>{{ .Post.Content }}</textarea>
-    </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Title -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">
+                        عنوان مقاله <span class="text-rose-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="title" 
+                        value="{{ .Post.Title }}" 
+                        placeholder="مثلاً: شروع کار با زبان Go"
+                        required 
+                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 text-sm transition outline-hidden bg-slate-50/50 focus:bg-white"
+                    >
+                </div>
 
-    <label>
-        <input type="checkbox" name="is_published" {{ if .Post.IsPublished }}checked{{ end }}>
-        انتشار عمومی در سایت
-    </label>
+                <!-- Slug -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">
+                        نامک انگلیسی (Slug) <span class="text-rose-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="slug" 
+                        value="{{ .Post.Slug }}" 
+                        placeholder="getting-started-with-go" 
+                        dir="ltr"
+                        required 
+                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 text-sm font-mono transition outline-hidden bg-slate-50/50 focus:bg-white"
+                    >
+                </div>
+            </div>
 
-    <div class="grid" style="margin-top: 1rem;">
-        <button type="submit">ذخیره مقاله</button>
-        <a href="/admin/blog" role="button" class="secondary">انصراف</a>
+            <!-- Summary -->
+            <div class="space-y-2">
+                <label class="block text-sm font-semibold text-slate-700">
+                    خلاصه کوتاه مقاله <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    name="summary" 
+                    value="{{ .Post.Summary }}" 
+                    placeholder="یک توضیح کوتاه و جذاب از محتوای مقاله..."
+                    required 
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 text-sm transition outline-hidden bg-slate-50/50 focus:bg-white"
+                >
+            </div>
+
+            <!-- Content -->
+            <div class="space-y-2">
+                <label class="block text-sm font-semibold text-slate-700">
+                    متن اصلی مقاله <span class="text-rose-500">*</span>
+                </label>
+                <textarea 
+                    name="content" 
+                    rows="8" 
+                    placeholder="متن کامل خود را اینجا بنویسید..."
+                    required 
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 text-sm leading-relaxed transition outline-hidden bg-slate-50/50 focus:bg-white"
+                >{{ .Post.Content }}</textarea>
+            </div>
+
+            <!-- Is Published Checkbox -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                <div class="space-y-0.5">
+                    <label for="is_published" class="text-sm font-semibold text-slate-800 cursor-pointer">
+                        وضعیت انتشار
+                    </label>
+                    <p class="text-xs text-slate-500">در صورت فعال بودن، این مقاله بلافاصله در صفحه اصلی و وبلاگ نمایش داده می‌شود.</p>
+                </div>
+                <div class="flex items-center">
+                    <input 
+                        type="checkbox" 
+                        id="is_published" 
+                        name="is_published" 
+                        {{ if .Post.IsPublished }}checked{{ end }}
+                        class="w-5 h-5 text-indigo-600 rounded-md border-slate-300 focus:ring-indigo-500 transition cursor-pointer"
+                    >
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+                <a href="/admin/blog" class="px-5 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">
+                    انصراف
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-sm cursor-pointer">
+                    ذخیره مقاله
+                </button>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 {{ end }}
